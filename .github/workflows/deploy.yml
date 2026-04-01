@@ -1,0 +1,23 @@
+name: Deploy to GitHub Pages
+
+on:
+  workflow_dispatch: # manual trigger from GitHub
+
+permissions:
+  contents: write # required by JamesIves/github-pages-deploy-action@v4
+
+jobs:
+
+  deploy-to-ghPages:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: . # static site — index.html is at the repo root

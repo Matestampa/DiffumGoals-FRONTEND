@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diffum Goals</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header__title">Diffum Goals</h1>
+            
+            <!-- Auth Section - Not Logged In -->
+            <div class="auth-buttons" id="authButtons">
+                <button class="btn btn--outline" id="showLoginBtn">Login</button>
+                <button class="btn btn--primary" id="showRegisterBtn">Register</button>
+            </div>
+            
+            <!-- Auth Section - Logged In -->
+            <div class="auth-user" id="authUser">
+                <span class="auth-user__name" id="authUsername"></span>
+                <button class="btn btn--outline" id="logoutBtn">Logout</button>
+            </div>
+        </header>
+
+        <!-- Login Section -->
+        <section class="auth-section" id="loginSection">
+            <div class="auth-form-container">
+                <h2 class="auth-form__title">Login</h2>
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="loginUsername">Username</label>
+                        <input type="text" class="form-input" id="loginUsername" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="loginPassword">Password</label>
+                        <input type="password" class="form-input" id="loginPassword" name="password" required minlength="8">
+                    </div>
+                    <p class="auth-form__error" id="loginError"></p>
+                    <div class="auth-form__actions">
+                        <button type="button" class="btn btn--secondary" id="cancelLoginBtn">Cancel</button>
+                        <button type="submit" class="btn btn--primary" id="submitLoginBtn">Login</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Register Section -->
+        <section class="auth-section" id="registerSection">
+            <div class="auth-form-container">
+                <h2 class="auth-form__title">Register</h2>
+                <form class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label" for="registerUsername">Username</label>
+                        <input type="text" class="form-input" id="registerUsername" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPassword">Password</label>
+                        <input type="password" class="form-input" id="registerPassword" name="password" required minlength="8">
+                        <span class="form-hint">Minimum 8 characters</span>
+                    </div>
+                    <p class="auth-form__error" id="registerError"></p>
+                    <div class="auth-form__actions">
+                        <button type="button" class="btn btn--secondary" id="cancelRegisterBtn">Cancel</button>
+                        <button type="submit" class="btn btn--primary" id="submitRegisterBtn">Register</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tabs__btn tabs__btn--active" data-status="diffuming">
+                Diffuming
+            </button>
+            <button class="tabs__btn" data-status="expired">
+                Expired
+            </button>
+            <button class="tabs__btn" data-status="completed">
+                Completed
+            </button>
+            <button class="tabs__btn" data-status="mygoals">
+                My Goals
+            </button>
+        </nav>
+
+        <!-- Controls Row -->
+        <div class="controls-row" id="controlsRow">
+            <div class="order-selector">
+                <span class="order-selector__label">Order by <span id="orderFieldLabel">Expire Date</span></span>
+                <button class="order-selector__btn" id="orderToggleBtn" data-order="1">
+                    <span class="order-selector__icon">↑</span>
+                    <span class="order-selector__text">ASC</span>
+                </button>
+            </div>
+            <div class="create-goal-trigger-wrap">
+                <button class="btn btn--primary btn--sm create-goal-trigger" id="showCreateGoalBtn">Create Goal</button>
+                <div class="create-goal-prompt" id="createGoalPrompt" role="status" aria-live="polite">Register or Login to create your goal</div>
+            </div>
+        </div>
+
+        <!-- Create Goal Section -->
+        <section class="create-goal-section" id="createGoalSection">
+            <div class="create-goal-container">
+                <h2 class="create-goal__title">Create New Goal</h2>
+                <form class="create-goal-form" id="createGoalForm" novalidate>
+                    <div class="form-group">
+                        <label class="form-label" for="goalDescription">Description</label>
+                        <textarea class="form-input create-goal-form__textarea" id="goalDescription" name="descr" minlength="5" maxlength="255" required></textarea>
+                        <span class="form-hint">Between 5 and 255 characters</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="goalLimitDate">Limit Date</label>
+                        <input type="date" class="form-input" id="goalLimitDate" name="limit_date" required>
+                        <span class="form-hint" id="goalLimitDateHint"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="goalImage">Image</label>
+                        <input type="file" class="form-input" id="goalImage" name="img" accept="image/png" required>
+                        <span class="form-hint" id="goalImageHint"></span>
+                    </div>
+
+                    <p class="create-goal-form__error" id="createGoalError"></p>
+
+                    <div class="create-goal-form__actions">
+                        <button type="button" class="btn btn--secondary" id="cancelCreateGoalBtn">Cancel</button>
+                        <button type="submit" class="btn btn--primary" id="submitCreateGoalBtn">Create Goal</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Complete Goal Section -->
+        <section class="complete-goal-section" id="completeGoalSection">
+            <div class="complete-goal-container">
+                <h2 class="complete-goal__title">Complete Goal</h2>
+                <p class="form-hint complete-goal__subtitle">Upload an image that represents goal completion</p>
+                <form class="complete-goal-form" id="completeGoalForm" novalidate>
+                    <input type="hidden" id="completeGoalId" name="goal_id">
+
+                    <div class="form-group">
+                        <label class="form-label" for="completeGoalImage">Completion Image</label>
+                        <input type="file" class="form-input" id="completeGoalImage" name="img" accept="image/png" required>
+                        <span class="form-hint" id="completeGoalImageHint"></span>
+                    </div>
+
+                    <p class="complete-goal-form__error" id="completeGoalError"></p>
+
+                    <div class="complete-goal-form__actions">
+                        <button type="button" class="btn btn--secondary" id="cancelCompleteGoalBtn">Cancel</button>
+                        <button type="submit" class="btn btn--primary" id="submitCompleteGoalBtn">Complete Goal</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Loading State -->
+            <div class="loading" id="loading">
+                <div class="loading__spinner"></div>
+                <p class="loading__text">Loading goals...</p>
+            </div>
+
+            <!-- Error State -->
+            <div class="error-message" id="errorMessage">
+                <p class="error-message__text"></p>
+                <button class="btn btn--primary" id="retryBtn">Retry</button>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState">
+                <p class="empty-state__text">No goals found</p>
+            </div>
+
+            <!-- Goals Grid -->
+            <div class="goals-grid" id="goalsGrid">
+                <!-- Goals will be dynamically inserted here -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <button class="btn btn--secondary" id="loadMoreBtn">
+                    Load More
+                </button>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 Diffum Dreams</p>
+        </footer>
+    </div>
+
+    <!-- Goal Card Template -->
+    <template id="goalCardTemplate">
+        <article class="goal-card">
+            <div class="goal-card__image-container">
+                <img class="goal-card__image" src="" alt="Goal image">
+            </div>
+            <div class="goal-card__content">
+                <p class="goal-card__description"></p>
+                <div class="goal-card__meta">
+                    <span class="goal-card__date"></span>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <!-- Scripts -->
+    <script src="src/js/services/api.js"></script>
+    <script src="src/js/const_vars.js"></script>
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/app.js"></script>
+</body>
+</html>

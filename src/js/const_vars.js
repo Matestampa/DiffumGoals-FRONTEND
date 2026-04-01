@@ -1,0 +1,5 @@
+let GOAL_MIN_DAY_LIMIT = 15
+let GOAL_MAX_DAY_LIMIT = 90
+let GOAL_IMG_WIDTH = 100
+let GOAL_IMG_HEIGHT = 100
+let GOAL_IMG_TYPE = 'image/png'
