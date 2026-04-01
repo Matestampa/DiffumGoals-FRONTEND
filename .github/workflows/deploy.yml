@@ -6,7 +6,7 @@ on:
 permissions:
   contents: write # required by JamesIves/github-pages-deploy-action@v4
 
-jobs:
+jobs: #o god
 
   deploy-to-ghPages:
     runs-on: ubuntu-22.04
