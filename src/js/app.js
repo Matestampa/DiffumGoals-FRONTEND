@@ -94,32 +94,43 @@
         showLoginBtn: document.getElementById('showLoginBtn'),
         showRegisterBtn: document.getElementById('showRegisterBtn'),
         logoutBtn: document.getElementById('logoutBtn'),
-        // Login form
-        loginSection: document.getElementById('loginSection'),
-        loginForm: document.getElementById('loginForm'),
-        loginUsername: document.getElementById('loginUsername'),
-        loginPassword: document.getElementById('loginPassword'),
-        loginError: document.getElementById('loginError'),
-        cancelLoginBtn: document.getElementById('cancelLoginBtn'),
-        submitLoginBtn: document.getElementById('submitLoginBtn'),
-        // Register form
-        registerSection: document.getElementById('registerSection'),
-        registerForm: document.getElementById('registerForm'),
-        registerUsername: document.getElementById('registerUsername'),
-        registerPassword: document.getElementById('registerPassword'),
-        registerError: document.getElementById('registerError'),
-        cancelRegisterBtn: document.getElementById('cancelRegisterBtn'),
-        submitRegisterBtn: document.getElementById('submitRegisterBtn'),
+        // OAuth section
+        oauthSection: document.getElementById('oauthSection'),
+        oauthSectionTitle: document.getElementById('oauthSectionTitle'),
+        googleAuthBtn: document.getElementById('googleAuthBtn'),
+        cancelOAuthBtn: document.getElementById('cancelOAuthBtn'),
         // Main content (to hide when showing auth forms)
         tabs: document.querySelector('.tabs'),
         orderSelector: document.querySelector('.order-selector'),
-        mainContent: document.querySelector('.main-content')
+        mainContent: document.querySelector('.main-content'),
+        // Toast
+        toast: document.getElementById('toast'),
+        toastMessage: document.getElementById('toastMessage'),
+        toastClose: document.getElementById('toastClose')
     };
 
     // ============================================
     // UI State Management
     // ============================================
-    
+
+    let toastTimer = null;
+
+    /**
+     * Show a toast notification
+     * @param {string} message - Message to display
+     * @param {number} [duration=4000] - Auto-hide delay in ms
+     */
+    function showToast(message, duration = 4000) {
+        elements.toastMessage.textContent = message;
+        elements.toast.classList.add('toast--visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(hideToast, duration);
+    }
+
+    function hideToast() {
+        elements.toast.classList.remove('toast--visible');
+    }
+
     /**
      * Show loading state
      */
@@ -1003,8 +1014,7 @@
      */
     function showMainContent() {
         state.currentAuthView = null;
-        elements.loginSection.classList.remove('auth-section--visible');
-        elements.registerSection.classList.remove('auth-section--visible');
+        elements.oauthSection.classList.remove('auth-section--visible');
         hideCreateGoalSection();
         hideCompleteGoalSection();
         elements.tabs.style.display = '';
@@ -1014,39 +1024,20 @@
     }
 
     /**
-     * Show login form
+     * Show OAuth section (used for both login and register)
+     * @param {'login'|'register'} mode
      */
-    function showLoginForm() {
-        state.currentAuthView = 'login';
-        elements.loginSection.classList.add('auth-section--visible');
-        elements.registerSection.classList.remove('auth-section--visible');
+    function showOAuthSection(mode) {
+        state.currentAuthView = mode;
+        elements.oauthSection.classList.add('auth-section--visible');
+        elements.oauthSectionTitle.textContent = mode === 'register' ? 'Create account' : 'Sign in';
+        elements.googleAuthBtn.href = `${API_BASE_URL}/users/auth/google`;
         hideCreateGoalPrompt();
         hideCreateGoalSection();
         hideCompleteGoalSection();
         elements.tabs.style.display = 'none';
         elements.controlsRow.style.display = 'none';
         elements.mainContent.style.display = 'none';
-        // Clear form
-        elements.loginForm.reset();
-        elements.loginError.textContent = '';
-    }
-
-    /**
-     * Show register form
-     */
-    function showRegisterForm() {
-        state.currentAuthView = 'register';
-        elements.registerSection.classList.add('auth-section--visible');
-        elements.loginSection.classList.remove('auth-section--visible');
-        hideCreateGoalPrompt();
-        hideCreateGoalSection();
-        hideCompleteGoalSection();
-        elements.tabs.style.display = 'none';
-        elements.controlsRow.style.display = 'none';
-        elements.mainContent.style.display = 'none';
-        // Clear form
-        elements.registerForm.reset();
-        elements.registerError.textContent = '';
     }
 
     /**
@@ -1071,85 +1062,6 @@
             state.user = null;
         }
         updateAuthUI();
-    }
-
-    /**
-     * Handle login form submit
-     * @param {Event} event - Submit event
-     */
-    async function handleLogin(event) {
-        event.preventDefault();
-        
-        const username = elements.loginUsername.value.trim();
-        const password = elements.loginPassword.value;
-        
-        elements.loginError.textContent = '';
-        elements.submitLoginBtn.disabled = true;
-        
-        try {
-            const response = await ApiService.loginUser(username, password);
-            
-            if (response.success) {
-                state.isLoggedIn = true;
-                state.user = {
-                    id: response.data.user_id,
-                    username: response.data.username
-                };
-                updateAuthUI();
-                showMainContent();
-                fetchGoals(state.currentStatus);
-            } else {
-                elements.loginError.textContent = response.error?.message || 'Login failed';
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            elements.loginError.textContent = 'An error occurred. Please try again.';
-        } finally {
-            elements.submitLoginBtn.disabled = false;
-        }
-    }
-
-    /**
-     * Handle register form submit
-     * @param {Event} event - Submit event
-     */
-    async function handleRegister(event) {
-        event.preventDefault();
-        
-        const username = elements.registerUsername.value.trim();
-        const password = elements.registerPassword.value;
-        
-        elements.registerError.textContent = '';
-        elements.submitRegisterBtn.disabled = true;
-        
-        try {
-            const response = await ApiService.registerUser(username, password);
-            
-            if (response.success) {
-                // Auto-login after successful registration
-                const loginResponse = await ApiService.loginUser(username, password);
-                if (loginResponse.success) {
-                    state.isLoggedIn = true;
-                    state.user = {
-                        id: loginResponse.data.user_id,
-                        username: loginResponse.data.username
-                    };
-                    updateAuthUI();
-                    showMainContent();
-                    fetchGoals(state.currentStatus);
-                } else {
-                    // Registration succeeded but auto-login failed, show login form
-                    showLoginForm();
-                }
-            } else {
-                elements.registerError.textContent = response.error?.message || 'Registration failed';
-            }
-        } catch (error) {
-            console.error('Register error:', error);
-            elements.registerError.textContent = 'An error occurred. Please try again.';
-        } finally {
-            elements.submitRegisterBtn.disabled = false;
-        }
     }
 
     /**
@@ -1290,17 +1202,15 @@
         elements.cancelCompleteGoalBtn.addEventListener('click', showMainContent);
         
         // Auth buttons
-        elements.showLoginBtn.addEventListener('click', showLoginForm);
-        elements.showRegisterBtn.addEventListener('click', showRegisterForm);
+        elements.showLoginBtn.addEventListener('click', () => showOAuthSection('login'));
+        elements.showRegisterBtn.addEventListener('click', () => showOAuthSection('register'));
         elements.logoutBtn.addEventListener('click', handleLogout);
-        
-        // Login form
-        elements.loginForm.addEventListener('submit', handleLogin);
-        elements.cancelLoginBtn.addEventListener('click', showMainContent);
-        
-        // Register form
-        elements.registerForm.addEventListener('submit', handleRegister);
-        elements.cancelRegisterBtn.addEventListener('click', showMainContent);
+
+        // OAuth section
+        elements.cancelOAuthBtn.addEventListener('click', showMainContent);
+
+        // Toast close
+        elements.toastClose.addEventListener('click', hideToast);
     }
 
     // ============================================
@@ -1319,6 +1229,14 @@
         configureCompleteGoalImageHint();
         await checkAuthStatus();
         fetchGoals(state.currentStatus);
+
+        // Handle OAuth error redirect
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('error') === 'oauth_failed') {
+            showToast('Authentication failed. Please try again.');
+            // Clean the URL without reloading the page
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     }
 
     // Start the app when DOM is ready

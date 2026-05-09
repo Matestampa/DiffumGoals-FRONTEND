@@ -169,6 +169,45 @@ body {
     min-height: 1.2em;
 }
 
+.auth-form__subtitle {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+}
+
+.oauth-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn--google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: #fff;
+    color: #3c4043;
+    border: 1px solid #dadce0;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color var(--transition), box-shadow var(--transition);
+}
+
+.btn--google:hover {
+    background-color: #f8f9fa;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn--google__icon {
+    flex-shrink: 0;
+}
+
 .auth-form__actions {
     display: flex;
     gap: 12px;
@@ -821,4 +860,49 @@ body {
     .goals-grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     }
+}
+
+/* ============================================
+   Toast Notification
+   ============================================ */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #1e293b;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    font-size: 0.95rem;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 1000;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.toast--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.toast__close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    margin-left: 4px;
+}
+
+.toast__close:hover {
+    color: #fff;
 }

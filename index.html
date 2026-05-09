@@ -25,48 +25,23 @@
             </div>
         </header>
 
-        <!-- Login Section -->
-        <section class="auth-section" id="loginSection">
+        <!-- OAuth Section (Login / Register) -->
+        <section class="auth-section" id="oauthSection">
             <div class="auth-form-container">
-                <h2 class="auth-form__title">Login</h2>
-                <form class="auth-form" id="loginForm">
-                    <div class="form-group">
-                        <label class="form-label" for="loginUsername">Username</label>
-                        <input type="text" class="form-input" id="loginUsername" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="loginPassword">Password</label>
-                        <input type="password" class="form-input" id="loginPassword" name="password" required minlength="8">
-                    </div>
-                    <p class="auth-form__error" id="loginError"></p>
-                    <div class="auth-form__actions">
-                        <button type="button" class="btn btn--secondary" id="cancelLoginBtn">Cancel</button>
-                        <button type="submit" class="btn btn--primary" id="submitLoginBtn">Login</button>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-        <!-- Register Section -->
-        <section class="auth-section" id="registerSection">
-            <div class="auth-form-container">
-                <h2 class="auth-form__title">Register</h2>
-                <form class="auth-form" id="registerForm">
-                    <div class="form-group">
-                        <label class="form-label" for="registerUsername">Username</label>
-                        <input type="text" class="form-input" id="registerUsername" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="registerPassword">Password</label>
-                        <input type="password" class="form-input" id="registerPassword" name="password" required minlength="8">
-                        <span class="form-hint">Minimum 8 characters</span>
-                    </div>
-                    <p class="auth-form__error" id="registerError"></p>
-                    <div class="auth-form__actions">
-                        <button type="button" class="btn btn--secondary" id="cancelRegisterBtn">Cancel</button>
-                        <button type="submit" class="btn btn--primary" id="submitRegisterBtn">Register</button>
-                    </div>
-                </form>
+                <h2 class="auth-form__title" id="oauthSectionTitle">Sign in</h2>
+                <p class="auth-form__subtitle">Continue with your Google account</p>
+                <div class="oauth-actions">
+                    <a class="btn btn--google" id="googleAuthBtn" href="#">
+                        <svg class="btn--google__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20" height="20">
+                            <path fill="#EA4335" d="M24 9.5c3.14 0 5.95 1.08 8.17 2.84l6.1-6.1C34.46 3.1 29.5 1 24 1 14.82 1 7.07 6.48 3.6 14.2l7.1 5.52C12.5 13.62 17.77 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.52 24.5c0-1.6-.14-3.14-.4-4.62H24v8.74h12.68c-.55 2.94-2.2 5.43-4.68 7.1l7.18 5.58C43.36 37.5 46.52 31.48 46.52 24.5z"/>
+                            <path fill="#FBBC05" d="M10.7 28.28A14.56 14.56 0 0 1 9.5 24c0-1.5.26-2.94.7-4.28L3.1 14.2A23.93 23.93 0 0 0 0 24c0 3.86.92 7.5 2.54 10.72l8.16-6.44z"/>
+                            <path fill="#34A853" d="M24 47c5.5 0 10.12-1.82 13.5-4.94l-7.18-5.58c-1.88 1.26-4.28 2.02-6.32 2.02-6.23 0-11.5-4.12-13.3-9.72l-8.16 6.44C7.07 41.52 14.82 47 24 47z"/>
+                        </svg>
+                        Continue with Google
+                    </a>
+                    <button type="button" class="btn btn--secondary" id="cancelOAuthBtn">Cancel</button>
+                </div>
             </div>
         </section>
 
@@ -210,6 +185,12 @@
             </div>
         </article>
     </template>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast" role="alert" aria-live="assertive">
+        <span class="toast__message" id="toastMessage"></span>
+        <button class="toast__close" id="toastClose" aria-label="Close">&times;</button>
+    </div>
 
     <!-- Scripts -->
     <script src="src/js/services/api.js"></script>

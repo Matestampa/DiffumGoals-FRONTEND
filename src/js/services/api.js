@@ -3,7 +3,7 @@
  * Handles all API calls to the backend
  */
 
-const API_BASE_URL = "https://diffumgoalsapi.lat";
+const API_BASE_URL = "https://api.diffumgoalsapi.lat"; // Change to your backend URL
 
 /**
  * Response handler for API calls
@@ -52,50 +52,6 @@ function handleError(error) {
 // ============================================
 // USER ENDPOINTS
 // ============================================
-
-/**
- * Register a new user
- * @param {string} username - Username (required)
- * @param {string} password - Password (required, min 8 characters)
- * @returns {Promise<Object>} - Response with user_id and username
- */
-async function registerUser(username, password) {
-    try {
-        const response = await fetch(`${API_BASE_URL}/users/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password }),
-            credentials: 'include'
-        });
-        return handleResponse(response);
-    } catch (error) {
-        return handleError(error);
-    }
-}
-
-/**
- * Login user
- * @param {string} username - Username (required)
- * @param {string} password - Password (required, min 8 characters)
- * @returns {Promise<Object>} - Response with user_id and username, sets JWT cookie
- */
-async function loginUser(username, password) {
-    try {
-        const response = await fetch(`${API_BASE_URL}/users/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password }),
-            credentials: 'include'
-        });
-        return handleResponse(response);
-    } catch (error) {
-        return handleError(error);
-    }
-}
 
 /**
  * Logout user
@@ -255,8 +211,6 @@ async function getGoalOriginalImage(goalId) {
 
 const ApiService = {
     // User endpoints
-    registerUser,
-    loginUser,
     logoutUser,
     isLoggedIn,
     
