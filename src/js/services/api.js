@@ -3,7 +3,7 @@
  * Handles all API calls to the backend
  */
 
-const API_BASE_URL = "https://diffumgoalsapi.lat";
+const API_BASE_URL = "https://api.diffumgoalsapi.lat"; // Change to your backend URL
 
 /**
  * Response handler for API calls
